@@ -1,7 +1,7 @@
 {
   "name": "@sonata/header",
   "scripts": {
-    "start": "webpack serve --port 9002 --env standalone",
+    "start": "webpack serve --port 7002 --env standalone",
     "start:standalone": "webpack serve --env standalone",
     "build": "concurrently npm:build:*",
     "build:webpack": "webpack --mode=production",
