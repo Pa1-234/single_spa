@@ -43,9 +43,6 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.3",
-    "@emotion/styled": "^11.11.0",
-    "@mui/material": "^5.15.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "single-spa-react": "^4.3.1"

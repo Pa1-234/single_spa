@@ -1,32 +1,36 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
+import React from 'react';
 
 export default function Header() {
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            LOGO
-          </Typography>
-          <Button color="inherit">Login</Button>
-        </Toolbar>
-      </AppBar>
-    </Box>
+    <header style={{ backgroundColor: '#2196F3', padding: '1rem', color: 'white' }}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <button
+          style={{
+            fontSize: '1.5rem',
+            backgroundColor: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+            marginRight: '1rem',
+            color: 'white',
+          }}
+        >
+          ☰
+        </button>
+        <div style={{ flexGrow: 1 }}>
+          <h1 style={{ margin: 0 }}>LOGO</h1>
+        </div>
+        <button
+          style={{
+            fontSize: '1rem',
+            backgroundColor: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+            color: 'white',
+          }}
+        >
+          Login
+        </button>
+      </div>
+    </header>
   );
 }
