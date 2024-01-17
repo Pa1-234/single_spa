@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import sharedConfig from '../../../container/src/config/config';
+import sharedConfig from '../../src/config/config';
 
 export default function Homepage() {
   const backendendpoint = sharedConfig.REACT_APP_API_URL;
