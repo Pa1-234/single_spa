@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Header() {
   return (
-    <header style={{ backgroundColor: '#2196F3', padding: '1rem', color: 'white' }}>
+    <header style={{ backgroundColor: '#2a3b4c', padding: '2rem', color: 'white' }}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <button
           style={{

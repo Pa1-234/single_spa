@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState ,useRef} from 'react';
 import axios from 'axios';
 import sharedConfig from '../../src/config/config';
 
@@ -6,46 +6,42 @@ export default function Homepage() {
   const backendendpoint = sharedConfig.REACT_APP_API_URL;
   const [data, setData] = useState(null);
   const [errors, setErrors] = useState([]);
+  const isMounted = useRef(true);
+  const microservices = sharedConfig.MICROSERVICES;
+  useEffect(() => {
+    return () => {
+      // Cleanup to set isMounted to false when the component unmounts
+      isMounted.current = false;
+    };
+  }, []);
 
   useEffect(() => {
-    const microservices = sharedConfig.MICROSERVICES;
+    if (isMounted.current) {
+      console.log('API call initiated...');
+      const requests = microservices.map((serviceName) =>
+        axios.get(`${backendendpoint}/${serviceName}`).catch((error) => {
+          // handle error
+        })
+      );
+  
+      Promise.all(requests)
+        .then((responses) => {
+          console.log('API call completed successfully.');
+          const responseData = responses.map((response) => response);
+          setData(responseData);
+        })
+        .catch((error) => {
+          console.error('Error making API calls:', error);
+          setErrors((prevErrors) => [...prevErrors, 'Failed to fetch data. Please try again.']);
+        });
+    }
+  }, [backendendpoint, microservices]);
 
-    // Make API calls to microservices based on the specified microservices
-    const requests = microservices.map((serviceName) =>
-      axios.get(`${backendendpoint}/${serviceName}`).catch((error) => {
-        // Handle individual API call errors here
-        console.error(`Error making API call to ${serviceName}:`, error);
-
-        // Check if the error is a network error
-        if (axios.isAxiosError(error) && error.code === 'ECONNABORTED') {
-          setErrors((prevErrors) => [...prevErrors, `Network error. Unable to connect to ${serviceName}`]);
-        } else {
-          setErrors((prevErrors) => [...prevErrors, `Failed to fetch data from ${serviceName}`]);
-        }
-
-        return { error: true };
-      })
-    );
-
-    // Use Promise.all to wait for all requests to complete
-    Promise.all(requests)
-      .then((responses) => {
-        // Handle responses as needed
-        const responseData = responses.map((response) => response.data);
-        setData(responseData);
-      })
-      .catch((error) => {
-        // Handle errors from the entire Promise.all
-        console.error('Error making API calls:', error);
-        setErrors((prevErrors) => [...prevErrors, 'Failed to fetch data. Please try again.']);
-      });
-  }, [backendendpoint]);
-
-  if (errors.length > 0) {
     return (
       <div
         style={{
-          maxWidth: 345,
+          flex: 1,
+          maxWidth: 'lg',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
           borderRadius: '8px',
           overflow: 'hidden',
@@ -53,37 +49,84 @@ export default function Homepage() {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
+          margin: '0 auto',
+          padding: '1rem',
+          minHeight: 'calc(75vh - 2rem)', // Adjust the padding and border height accordingly
+     
         }}
       >
-        <ul style={{ color: 'red', padding: '10px' }}>
-          {errors.map((errorMessage, index) => (
-            <li key={index}>{errorMessage}</li>
-          ))}
-        </ul>
+        <table
+          style={{
+            width: '100%',
+            borderCollapse: 'collapse',
+            margin: '1rem 0',
+          }}
+        >
+          <thead>
+            <tr>
+              <th
+                style={{
+                  backgroundColor: '#2a3b4c',
+                  color: 'white',
+                  padding: '0.5rem',
+                  textAlign: 'left',
+                  borderBottom: '2px solid white',
+                }}
+              >
+                Microservice
+              </th>
+              <th
+                style={{
+                  backgroundColor: '#2a3b4c',
+                  color: 'white',
+                  padding: '0.5rem',
+                  textAlign: 'left',
+                  borderBottom: '2px solid white',
+                }}
+              >
+                Response
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {errors.map((errorMessage, index) => (
+              <tr key={index}>
+                <td>{microservices[index]}</td>
+                <td
+                  style={{
+                    color: 'red',
+                    padding: '0.5rem',
+                    borderBottom: '1px solid #2a3b4c',
+                  }}
+                >
+                  {errorMessage}
+                </td>
+              </tr>
+            ))}
+            {data &&
+              data.map((response, index) => (
+                <tr key={index}>
+                  <td>{microservices[index]}</td>
+                  <td
+                    style={{
+                      padding: '0.5rem',
+                      borderBottom: '1px solid #2a3b4c',
+                    }}
+                  >
+                    {response ? (
+                        response.error ? (
+                          <p style={{ color: 'red' }}>{response.errorMessage}</p>
+                        ) : (
+                          <pre style={{ margin: 0 }}>{JSON.stringify(response.data, null, 2)}</pre>
+                        )
+                      ) : (
+                        <p style={{ color: 'red' }}>Connection error. Unable to fetch data from the service.</p>
+                      )}
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
       </div>
-    );
-  }
-
-  return (
-    <div
-      style={{
-        maxWidth: 345,
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        borderRadius: '8px',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      {data &&
-        data.map((response, index) => (
-          <div key={index}>
-            {/* Display data from each microservice response */}
-            <p>{JSON.stringify(response)}</p>
-          </div>
-        ))}
-    </div>
   );
 }
