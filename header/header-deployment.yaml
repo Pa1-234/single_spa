@@ -1,0 +1,23 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: header-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: header
+  template:
+    metadata:
+      labels:
+        app: header
+    spec:
+      containers:
+        - name: header
+          image: pavankumarsangisetti/headerrepo:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 7002
+			
+			
