@@ -1,0 +1,21 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: container-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: container
+  template:
+    metadata:
+      labels:
+        app: container
+    spec:
+      containers:
+        - name: container
+          image: pavankumarsangisetti/containerrepo:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 7001
