@@ -1,0 +1,21 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: footer-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: footer
+  template:
+    metadata:
+      labels:
+        app: footer
+    spec:
+      containers:
+        - name: footer
+          image: pavankumarsangisetti/footerrepo:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 7004
