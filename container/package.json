@@ -1,7 +1,7 @@
 {
   "name": "@sonata/root-config",
   "scripts": {
-    "start": "webpack serve --port 7001 --env isLocal",
+    "start": "webpack serve --port 7001 --env standalone",
     "lint": "eslint src --ext js",
     "test": "cross-env BABEL_ENV=test jest --passWithNoTests",
     "format": "prettier --write .",
